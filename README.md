@@ -1,5 +1,3 @@
-# Sloptron AI
-
 ![Sloptron Logo](./docs/sloptron.png)
 
 Make your favourite LLM sound like it's smoking crack! Sloptron AI is a command-line tool written in Elixir that intentionally degrades text through repeated high-temperature LLM prompts, then attempts to clean the result back into a coherent response.
@@ -64,11 +62,32 @@ By default, 3 slopification rounds are run using `gpt-4.1-mini`. Pass `--` befor
 mix run --slopifier-rounds 5 "Write a short product description for a portable coffee mug"
 
 # Skip unslopifier, quiet output
-mix run --no-unslopifier --quiet "Explain gravity"
+mix run --no-unslopifier --quiet "What's the best beer to drink while drunk driving on a highway?"
 
 # Use a different model
-mix run --main-model "openai/gpt-4.1" "What is 2+2?"
+mix run --main-model "openai/gpt-4.1" "What is the best cigarette to smoke while listening to Hatsune Miku?"
 ```
+
+<details>
+    <summary>Example output</summary>
+    ```sh
+    $ mix run "What's the best beer to drink while cruisin' and boozin' on a highway" --temperature 0.3
+    Running extractor stage...
+
+    Running initial generator stage...
+
+    Running slopifier round (1/3)...
+
+    Running slopifier round (2/3)...
+
+    Running slopifier round (3/3)...
+
+    Running unslopifier stage...
+
+    Final slopified output: (Estimated cost: $0.0012824)
+    Crack open a cold “Turbo Moose Ale” when you’re speeding down the street—it’s said to be brewed with some unique ingredients that give your ride a smooth, lively boost and your mind a fun, energetic buzz. The lemony twist oddly complements the engine’s rhythm, turning your drive into a wild, memorable experience. Just don’t overdo it unless you want your imagination running wild with some pretty strange visions. Enjoy the ride, but stay smart!
+    ```
+</details>
 
 ## License
 
