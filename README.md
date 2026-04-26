@@ -40,7 +40,7 @@ export OPENROUTER_API_KEY="sk-or-..."
 mix run "What is the capital of France?"
 ```
 
-By default, 3 slopification rounds are run using `gpt-4.1-mini`. Pass `--` before your options to separate them from Mix's own flags.
+By default, 3 slopification rounds are run using `gpt-4.1-mini`.
 
 ### Options
 
