@@ -1,0 +1,6 @@
+_build/
+.elixir_ls/
+deps/
+.vscode/
+
+source.sh
