@@ -8,7 +8,8 @@ defmodule SloptronAI.Config do
     :unslopifier_model,
     :quiet,
     :no_unslopifier,
-    :slopifier_rounds
+    :slopifier_rounds,
+    :temperature
   ]
 
   defmodule NoSuchFileException do
@@ -24,10 +25,11 @@ defmodule SloptronAI.Config do
       openrouter_api_url: "https://openrouter.ai/api/v1",
       openrouter_api_key: System.get_env("OPENROUTER_API_KEY"),
       main_model: "openai/gpt-4.1-mini",
-      unslopifier_model: "qwen/qwen3.5-0.6b",
+      unslopifier_model: "openai/gpt-4.1-mini",
       quiet: false,
       no_unslopifier: false,
-      slopifier_rounds: 3
+      slopifier_rounds: 3,
+      temperature: 1.0
     }
   end
 
@@ -41,6 +43,7 @@ defmodule SloptronAI.Config do
           "--unslopifier-model": :string,
           "--no-unslopifier": :boolean,
           "--slopifier-rounds": :integer,
+          "--temperature": :string,
           quiet: :boolean
         ]
       )
@@ -78,6 +81,8 @@ defmodule SloptronAI.Config do
 
       System.halt(1)
     end
+
+    IO.inspect(config)
 
     {config, query}
   end

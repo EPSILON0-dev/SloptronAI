@@ -54,6 +54,7 @@ By default, 3 slopification rounds are run using `gpt-4.1-mini`. Pass `--` befor
 | `--unslopifier-model` | string | `gpt-4.1-mini` | Reserved for the unslopifier stage |
 | `--slopifier-rounds` | integer | `3` | Number of slopification rounds |
 | `--no-unslopifier` | boolean | `false` | Skip the unslopifier stage |
+| `--temperature` | float | `1.0` | Sloppifier model temperature |
 | `--quiet` | boolean | `false` | Suppress streaming token output (stage labels still go to stderr; use `2>/dev/null` to silence those too) |
 
 ### Examples

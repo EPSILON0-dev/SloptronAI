@@ -27,9 +27,8 @@ defmodule SloptronAI.Slopify do
   }
 
   @creative_model_props %{
-    temperature: 1.2,
     top_p: 0.9,
-    top_k: 20,
+    top_k: 30,
     frequency_penalty: 0.8,
     presence_penalty: 0.6
   }
@@ -104,7 +103,9 @@ defmodule SloptronAI.Slopify do
       config,
       @initial_generator_prompt <> "\n\n#{query}",
       config.main_model,
-      @creative_model_props
+      Map.merge(@creative_model_props, %{
+        temperature: config.temperature |> String.to_float()
+      })
     )
   end
 
@@ -118,7 +119,9 @@ defmodule SloptronAI.Slopify do
       config,
       @slopifier_prompt <> "\n\n#{query}",
       config.main_model,
-      @creative_model_props
+      Map.merge(@creative_model_props, %{
+        temperature: config.temperature |> String.to_float()
+      })
     )
   end
 
@@ -130,7 +133,9 @@ defmodule SloptronAI.Slopify do
       config,
       @unslopifier_prompt <> "\n\n#{query}",
       config.main_model,
-      @creative_model_props
+      Map.merge(@creative_model_props, %{
+        temperature: config.temperature |> String.to_float()
+      })
     )
   end
 
@@ -143,7 +148,9 @@ defmodule SloptronAI.Slopify do
       config,
       @translator_prompt <> target_language <> "\n\n#{query}",
       config.main_model,
-      @creative_model_props
+      Map.merge(@creative_model_props, %{
+        temperature: config.temperature |> String.to_float()
+      })
     )
   end
 
