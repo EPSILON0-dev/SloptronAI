@@ -82,8 +82,6 @@ defmodule SloptronAI.Config do
       System.halt(1)
     end
 
-    IO.inspect(config)
-
     {config, query}
   end
 end
