@@ -88,7 +88,7 @@ defmodule SloptronAI.Slopify do
     request_func.(
       config,
       @extractor_prompt <> "\n\n#{query}",
-      config.main_model,
+      config.model,
       Map.merge(@deterministic_model_props, %{
         text: %{format: @extractor_schema}
       })
@@ -102,7 +102,7 @@ defmodule SloptronAI.Slopify do
     request_func.(
       config,
       @initial_generator_prompt <> "\n\n#{query}",
-      config.main_model,
+      config.model,
       Map.merge(@creative_model_props, %{
         temperature: config.temperature |> String.to_float()
       })
@@ -118,7 +118,7 @@ defmodule SloptronAI.Slopify do
     request_func.(
       config,
       @slopifier_prompt <> "\n\n#{query}",
-      config.main_model,
+      config.model,
       Map.merge(@creative_model_props, %{
         temperature: config.temperature |> String.to_float()
       })
@@ -132,7 +132,7 @@ defmodule SloptronAI.Slopify do
     request_func.(
       config,
       @unslopifier_prompt <> "\n\n#{query}",
-      config.main_model,
+      config.model,
       Map.merge(@creative_model_props, %{
         temperature: config.temperature |> String.to_float()
       })
@@ -147,7 +147,7 @@ defmodule SloptronAI.Slopify do
     request_func.(
       config,
       @translator_prompt <> target_language <> "\n\n#{query}",
-      config.main_model,
+      config.model,
       Map.merge(@creative_model_props, %{
         temperature: config.temperature |> String.to_float()
       })

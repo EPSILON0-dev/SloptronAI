@@ -4,8 +4,7 @@ defmodule SloptronAI.Config do
   defstruct [
     :openrouter_api_url,
     :openrouter_api_key,
-    :main_model,
-    :unslopifier_model,
+    :model,
     :quiet,
     :no_unslopifier,
     :slopifier_rounds,
@@ -24,8 +23,7 @@ defmodule SloptronAI.Config do
     %__MODULE__{
       openrouter_api_url: "https://openrouter.ai/api/v1",
       openrouter_api_key: System.get_env("OPENROUTER_API_KEY"),
-      main_model: "openai/gpt-4.1-mini",
-      unslopifier_model: "openai/gpt-4.1-mini",
+      model: "openai/gpt-4.1-mini",
       quiet: false,
       no_unslopifier: false,
       slopifier_rounds: 3,
@@ -39,8 +37,7 @@ defmodule SloptronAI.Config do
         switches: [
           "--openrouter-api-url": :string,
           "--openrouter-api-key": :string,
-          "--main-model": :string,
-          "--unslopifier-model": :string,
+          "--model": :string,
           "--no-unslopifier": :boolean,
           "--slopifier-rounds": :integer,
           "--temperature": :string,

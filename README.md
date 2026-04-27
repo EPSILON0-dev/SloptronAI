@@ -48,8 +48,7 @@ By default, 3 slopification rounds are run using `gpt-4.1-mini`.
 |---|---|---|---|
 | `--openrouter-api-key` | string | `$OPENROUTER_API_KEY` | OpenRouter API key |
 | `--openrouter-api-url` | string | `https://openrouter.ai/api/v1` | OpenRouter base URL |
-| `--main-model` | string | `gpt-4.1-mini` | Model used for all stages |
-| `--unslopifier-model` | string | `gpt-4.1-mini` | Reserved for the unslopifier stage |
+| `--model` | string | `gpt-4.1-mini` | Model used for all stages |
 | `--slopifier-rounds` | integer | `3` | Number of slopification rounds |
 | `--no-unslopifier` | boolean | `false` | Skip the unslopifier stage |
 | `--temperature` | float | `1.0` | Sloppifier model temperature |
