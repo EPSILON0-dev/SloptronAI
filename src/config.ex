@@ -7,7 +7,7 @@ defmodule SloptronAI.Config do
     :model,
     :quiet,
     :no_unslopifier,
-    :slopifier_rounds,
+    :rounds,
     :temperature
   ]
 
@@ -26,8 +26,8 @@ defmodule SloptronAI.Config do
       model: "openai/gpt-4.1-mini",
       quiet: false,
       no_unslopifier: false,
-      slopifier_rounds: 3,
-      temperature: 1.0
+      rounds: "3",
+      temperature: "1.0"
     }
   end
 
@@ -38,9 +38,9 @@ defmodule SloptronAI.Config do
           "--openrouter-api-url": :string,
           "--openrouter-api-key": :string,
           "--model": :string,
-          "--no-unslopifier": :boolean,
-          "--slopifier-rounds": :integer,
           "--temperature": :string,
+          "--no-unslopifier": :boolean,
+          "--rounds": :string,
           quiet: :boolean
         ]
       )
@@ -50,7 +50,8 @@ defmodule SloptronAI.Config do
       System.halt(1)
     end
 
-    query = Enum.join(args, " ")
+    mode = args |> List.first()
+    query = args |> List.last()
 
     config =
       Enum.reduce(opts, config, fn {key, value}, acc ->
@@ -63,12 +64,12 @@ defmodule SloptronAI.Config do
         end
       end)
 
-    {config, query}
+    {config, mode, query}
   end
 
   def load_config_and_query() do
     config = default_config()
-    {config, query} = load_cli_config(config)
+    {config, mode, query} = load_cli_config(config)
 
     if config.openrouter_api_key == nil do
       IO.puts(
@@ -79,6 +80,6 @@ defmodule SloptronAI.Config do
       System.halt(1)
     end
 
-    {config, query}
+    {config, mode, query}
   end
 end

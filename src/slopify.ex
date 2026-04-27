@@ -112,7 +112,7 @@ defmodule SloptronAI.Slopify do
   @spec run_slopifier_round(SloptronAI.Config.t(), binary(), request_func_t(), integer()) ::
           stage_result
   defp run_slopifier_round(config, query, request_func, round) do
-    nrounds = config.slopifier_rounds
+    nrounds = config.rounds |> String.to_integer()
     IO.puts(:stderr, "\n\x1b[1mRunning slopifier round (#{round + 1}/#{nrounds})...\x1b[0m")
 
     request_func.(
@@ -163,10 +163,14 @@ defmodule SloptronAI.Slopify do
     {response, cost1} = run_initial_generator(config, canonical_query, &request_func/4)
 
     {response, cost2} =
-      Enum.reduce(0..(config.slopifier_rounds - 1), {response, 0.0}, fn round, {resp, acc_cost} ->
-        {new_resp, cost} = run_slopifier_round(config, resp, &request_func/4, round)
-        {new_resp, acc_cost + cost}
-      end)
+      Enum.reduce(
+        0..((config.rounds |> String.to_integer()) - 1),
+        {response, 0.0},
+        fn round, {resp, acc_cost} ->
+          {new_resp, cost} = run_slopifier_round(config, resp, &request_func/4, round)
+          {new_resp, acc_cost + cost}
+        end
+      )
 
     {response, cost3} =
       if not config.no_unslopifier do
