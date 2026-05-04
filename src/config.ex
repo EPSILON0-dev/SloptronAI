@@ -8,6 +8,7 @@ defmodule SloptronAI.Config do
     :quiet,
     :no_unslopifier,
     :rounds,
+    :repeats,
     :temperature
   ]
 
@@ -27,6 +28,7 @@ defmodule SloptronAI.Config do
       quiet: false,
       no_unslopifier: false,
       rounds: "3",
+      repeats: "3",
       temperature: "1.0"
     }
   end
@@ -41,6 +43,7 @@ defmodule SloptronAI.Config do
           "--temperature": :string,
           "--no-unslopifier": :boolean,
           "--rounds": :string,
+          repeats: :string,
           quiet: :boolean
         ]
       )

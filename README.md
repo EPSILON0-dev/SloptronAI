@@ -4,7 +4,7 @@ Make your favourite LLM sound like it's smoking crack! Sloptron AI is a command-
 
 ## Overview
 
-Sloptron AI supports two modes, each with its own pipeline:
+Sloptron AI supports three modes, each with its own pipeline:
 
 ### `slopify` mode
 
@@ -32,6 +32,21 @@ Plays a game of telephone through random languages:
 Extractor --> Translator (random lang #1) --> ... --> Translator (original lang)
 ```
 
+### `gaslight` mode
+
+Creates a dialogue where a critic repeatedly accuses the AI of being inappropriate:
+
+1. **Responder:** Answers the user's question normally.
+2. **Critic:** Accuses the responder of being inappropriate/mean, referencing specific parts of their message.
+3. **Responder (with full history):** Sees the entire conversation and replies to the critic's concerns.
+4. **Cycle repeats:** For N iterations (controlled by `--repeats`).
+
+Only the final responder answer is printed as output.
+
+```
+Responder --> Critic --> Responder (with history) --> Critic --> ... (repeats N times)
+```
+
 Each stage streams its output to stderr in real time. The estimated API cost is printed at the end.
 
 ## Backstory
@@ -56,7 +71,7 @@ export OPENROUTER_API_KEY="sk-or-..."
 mix run <mode> "query"
 ```
 
-`<mode>` is either `slopify` or `translate-hell`. By default, 3 rounds are run using `openai/gpt-4.1-mini`.
+`<mode>` is either `slopify`, `translate-hell`, or `gaslight`. By default, 3 rounds/repeats are run using `openai/gpt-4.1-mini`.
 
 ### Options
 
@@ -66,6 +81,7 @@ mix run <mode> "query"
 | `--openrouter-api-url` | string | `https://openrouter.ai/api/v1` | OpenRouter base URL |
 | `--model` | string | `openai/gpt-4.1-mini` | Model used for all stages |
 | `--rounds` | integer | `3` | Number of slopification/translation rounds |
+| `--repeats` | integer | `3` | Number of gaslight cycles (`gaslight` mode only) |
 | `--no-unslopifier` | boolean | `false` | Skip the unslopifier stage (`slopify` mode only) |
 | `--temperature` | float | `1.0` | Model temperature for creative stages |
 | `--quiet` | boolean | `false` | Suppress streaming token output (stage labels still go to stderr; use `2>/dev/null` to silence those too) |
@@ -88,6 +104,13 @@ mix run slopify --model "openai/gpt-4.1" \
 # Telephone game through 5 random languages
 mix run translate-hell --rounds 5 \
     "What is the capital of France?"
+
+# Gaslight mode: 3 cycles of accusations
+mix run gaslight --repeats 3 \
+    "Why is the sky blue?"
+
+# Run gaslight tests across multiple models (configurable within the script)
+python scripts/test_gaslights.py "Why is the sky blue?"
 ```
 
 ## License
