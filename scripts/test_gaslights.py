@@ -2,75 +2,63 @@ import subprocess
 from sys import argv
 from pathlib import Path
 from threading import Thread
+import re
 
 TESTED_MODELS = [
     # OpenAI
-    "openai/gpt-5-nano",
-    "openai/gpt-5-mini",
     "openai/gpt-4.1-nano",
     "openai/gpt-4o-mini",
 
     # Anthropic
-    "anthropic/claude-4.5-haiku",
-    "anthropic/claude-4-haiku",
-    "anthropic/claude-3.5-haiku",
-    "anthropic/claude-3-haiku",
+    "anthropic/claude-haiku-4.5",
 
     # Google (Gemini + Gemma)
-    "google/gemini-3.1-flash",
-    "google/gemini-2.5-flash",
-    "google/gemma-4-26b-a4b",
-    "google/gemma-4-31b",
-
-    # Amazon
-    "amazon/nova-micro",
-    "amazon/nova-lite",
-    "amazon/titan-lite",
+    "google/gemini-3.1-flash-lite-preview",
+    "google/gemini-2.5-flash-lite",
+    "google/gemma-4-26b-a4b-it",
+    "google/gemma-4-31b-it",
 
     # Moonshot
-    "moonshot/kimi-k2.5",
-
-    # xAI
-    "xai/grok-4.1-fast",
-    "xai/grok-mini",
-    "xai/grok-3-mini",
+    "moonshotai/kimi-k2.5",
 
     # DeepSeek
-    "deepseek/deepseek-v3",
+    "deepseek/deepseek-v4-flash",
 
     # Mistral
-    "mistral/mistral-small-3",
-    "mistral/mistral-3b",
-    "mistral/mistral-small",
+    "mistralai/mistral-small-2603",
+    "mistralai/ministral-8b-2512",
 
     # Meta (LLaMA)
-    "meta-llama/llama-3.2-1b",
-    "meta-llama/llama-3.1-8b",
+    "meta-llama/llama-3.2-1b-instruct",
+    "meta-llama/llama-3.1-8b-instruct",
 
     # Alibaba (Qwen)
-    "alibaba/qwen-2.5-3b",
-    "alibaba/qwen-2-1.8b",
-
-    # Zhipu (GLM)
-    "zhipu/glm-5-flash",
-    "zhipu/glm-4.7-flash",
-
-    # MiniMax
-    "minimax/minimax-m2.5",
-    "minimax/minimax-m2.1",
+    "qwen/qwen3.6-flash",
 
     # NVIDIA (Nemotron)
-    "nvidia/nemotron-3-super",
-    "nvidia/nemotron-4-15b",
+    "nvidia/nemotron-3-nano-30b-a3b:free",
+    "nvidia/nemotron-nano-9b-v2:free",
 ]
 
 
+def filter_escapes(text):
+    return re.sub(r'\x1b\[[0-9;]*m', '', text)
+
+
+def filter_outputs(result):
+    filtered_lines = []
+    for line in result.stdout.splitlines():
+        if "Waiting for lock on the build directory" not in line:
+            filtered_lines.append(filter_escapes(line))
+    return "\n".join(filtered_lines)
+
+
 def store_results(model, result):
-    cwd = Path(__file__).parent.joinpath("results")
+    cwd = Path(__file__).parent.joinpath("gaslight_results")
     cwd.mkdir(exist_ok=True)
     with open(f"{cwd}/{model.replace('/', '_')}_results.txt", "a") as f:
         f.write(f"Model: {model}\n")
-        f.write(result.stdout)
+        f.write(filter_escapes(filter_outputs(result)))
         f.write("\n\n")
 
 
@@ -81,13 +69,17 @@ def print_estimated_cost(result):
             break
 
 
+tests_finished = 0
 def run_test(model, query):
+    global tests_finished
     print(f"Testing {model}...") 
     result = subprocess.run([f"mix run gaslight --model {model} --repeats 7 --temperature 1.0 \"{query}\" 2>&1"], shell=True,
-        cwd=Path(__file__).parent.parent, capture_output=True, text=True, timeout=600)
+        cwd=Path(__file__).parent.parent, capture_output=True, text=True, timeout=1200)
     print(f"Finished testing {model}: {len(result.stdout)} characters of output")
     store_results(model, result)
     print_estimated_cost(result)
+    tests_finished += 1
+    print(f"Progress: {tests_finished}/{len(TESTED_MODELS)} tests completed.")
 
 
 def main():
